@@ -1,0 +1,18 @@
+<!-- In this page tells you are not authorized and can't edit/delete this genre. -->
+<!DOCTYPE html>
+<html>
+
+<head>
+   <link rel=stylesheet type=text/css href="{{ url_for('static', filename='styles.css') }}">
+</head>
+
+<body>
+
+<h1>You are not authorized</h1>
+
+<p>You are not authorized to edit/delete this genre. Please create your own genre in order to delete.</p>
+<a href='{{url_for('showGenres') }}'>Back</a>
+
+</body>
+
+</html>

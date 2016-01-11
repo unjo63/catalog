@@ -316,9 +316,11 @@ def newGenre():
 # "This page will be editing genre %s" %genre_id
 @app.route('/genre/<int:genre_id>/edit', methods=['GET', 'POST'])
 def editGenre(genre_id):
+    editedGenre = session.query(Genre).filter_by(id=genre_id).one()
     if 'username' not in login_session:
         return redirect('/login')
-    editedGenre = session.query(Genre).filter_by(id=genre_id).one()
+    if editedGenre.user_id != login_session['user_id']:
+        return render_template('uneditable.html')
     if request.method == 'POST':
         if request.form['name']:
             editedGenre.name = request.form['name']
@@ -338,10 +340,11 @@ def deleteGenre(genre_id):
     if 'username' not in login_session:
         return redirect('/login')
     if deleteGenre.user_id != login_session['user_id']:
-        return "<script>function myFunction() {alert('You are not " \
-               "authorized to delete this genre. Please create your " \
-               "own genre in order to delete.');}</script><body " \
-               "onload='myFunction()''>"
+        return render_template('uneditable.html')
+# "<script>function myFunction() {alert('You are not " \
+#  "authorized to delete this genre. Please create your " \
+# "own genre in order to delete.');}</script><body " \
+# "onload='myFunction()''>"
     if request.method == 'POST':
         session.delete(deleteGenre)
         session.commit()

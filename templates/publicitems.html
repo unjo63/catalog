@@ -9,7 +9,7 @@
 <div class="col-md-2 text-right">
 	<a href="{{url_for('showLogin')}}">Login </a>
 </div>
-<h1>{{genre.name}}</h1>
+<h1>Cosmetic Items for {{genre.name}}</h1>
 
 <!--MESSAGE FLASHING EXAMPLE -->
 {% with messages = get_flashed_messages() %}
@@ -18,7 +18,7 @@
 <ul>
 {% for message in messages %}
   <li><strong>{{message}}</strong></li>
-  {% endfor %}
+{% endfor %}
 </ul>
 {% endif %}
 {% endwith %}
@@ -31,10 +31,6 @@
 {{i.name}}</br>
 
 {{i.description}}</br>
-
-<!-- {{i.developer}}</br>
-
-{{i.release}}</br> -->
 
 </p>
 </div>
