@@ -1,0 +1,57 @@
+<!-- This page shows list of Items, with edit/delete/create button for login users -->
+<html>
+
+<head>
+  <link rel=stylesheet type=text/css href="{{ url_for('static', filename='styles.css') }}">
+</head>
+
+<body>
+<div class="col-md-2 text-right">
+	<a href="{{url_for('disconnect')}}">Logout </a>
+</div>
+
+<h1>{{genre.name}}</h1>
+
+<!--MESSAGE FLASHING EXAMPLE -->
+{% with messages = get_flashed_messages() %}
+{% if messages %}
+
+<ul>
+{% for message in messages %}
+  <li><strong>{{message}}</strong></li>
+  {% endfor %}
+</ul>
+{% endif %}
+{% endwith %}
+
+<div>
+
+<a href='{{url_for('newItem', genre_id = genre.id) }}'>Create Item</a>
+</br>
+
+{% for i in items %}
+
+<p>
+{{i.name}}</br>
+
+{{i.description}}</br>
+
+<!-- {{i.developer}}</br>
+
+{{i.release}}</br> -->
+
+<a href='{{url_for('editItem', genre_id = genre.id, item_id = i.id) }}'>Edit</a>
+</br>
+
+<a href = '{{url_for('deleteItem', genre_id = genre.id, item_id = i.id) }}'>Delete</a>
+</br>
+</p>
+</div>
+
+
+{% endfor %}
+
+<a href='{{url_for('showGenres') }}'>Back</a>
+</body>
+
+</html>

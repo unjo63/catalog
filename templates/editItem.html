@@ -1,0 +1,31 @@
+<!-- In this page you can edit a Item.-->
+<html>
+
+<head>
+	<link rel=stylesheet type=text/css href="{{ url_for('static', filename='styles.css') }}">
+	</head>
+
+<body>
+<h1> Edit Item </h1>
+
+<form action="{{url_for('editItem', genre_id=genre_id, item_id=item_id )}}" method = 'POST'>
+
+<br>Name:</br>
+<input type='text' size='30' name='name' placeholder = '{{i.name}}'></br></br>
+
+<br>Description:</br>
+<input type='text' size='250' name='description' placeholder = '{{i.description}}'></br></br>
+
+<!--<br>Developer:</br>
+<input type='text' size='30' name='developer' placeholder = '{{i.developer}}'></br></br>
+
+<br>Release:</br>
+<input type='text' size='30' name='release' placeholder = '{{i.release}}'></br></br> -->
+
+<input type='submit' value='Edit'>
+<a href='{{url_for('showItems', genre_id = genre_id) }}'>Cancel</a>
+
+</form>
+
+</body>
+</html>
