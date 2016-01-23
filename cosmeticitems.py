@@ -76,8 +76,6 @@ class Item(Base):
             'name': self.name,
             'id': self.id,
             'description': self.description,
-            # 'developer': self.developer,
-            # 'release': self.release,
             'genre_id': self.genre_id,
             'user_id': self.user_id,
         }

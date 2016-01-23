@@ -274,7 +274,6 @@ def showGenresJSON():
 
 @app.route('/genre/<int:genre_id>/items/JSON')
 def showItemsJSON(genre_id):
-    genre = session.query(Genre).filter_by(id=genre_id).one()
     items = session.query(Item).filter_by(genre_id=genre_id).all()
     return jsonify(Items=[i.serialize for i in items])
 
@@ -285,7 +284,7 @@ def ItemJSON(genre_id, item_id):
     return jsonify(Item=item.serialize)
 
 
-#login decorator
+# login decorator
 def login_required(f):
     @wraps(f)
     def decorated_function(*args, **kwargs):
@@ -312,8 +311,6 @@ def showGenres():
 @app.route('/genre/new', methods=['GET', 'POST'])
 @login_required
 def newGenre():
-    #if 'username' not in login_session:
-    #    return redirect('/login')
     if request.method == 'POST':
         newGenre = Genre(
             name=request.form['name'],
@@ -332,8 +329,6 @@ def newGenre():
 @login_required
 def editGenre(genre_id):
     editedGenre = session.query(Genre).filter_by(id=genre_id).one()
-    #if 'username' not in login_session:
-    #    return redirect('/login')
     if editedGenre.user_id != login_session['user_id']:
         return render_template('uneditable.html')
     if request.method == 'POST':
@@ -353,14 +348,8 @@ def editGenre(genre_id):
 @login_required
 def deleteGenre(genre_id):
     deleteGenre = session.query(Genre).filter_by(id=genre_id).one()
-    #if 'username' not in login_session:
-    #    return redirect('/login')
     if deleteGenre.user_id != login_session['user_id']:
         return render_template('uneditable.html')
-# "<script>function myFunction() {alert('You are not " \
-#  "authorized to delete this genre. Please create your " \
-# "own genre in order to delete.');}</script><body " \
-# "onload='myFunction()''>"
     if request.method == 'POST':
         session.delete(deleteGenre)
         session.commit()
@@ -391,14 +380,10 @@ def showItems(genre_id):
 @app.route('/genre/<int:genre_id>/item/new', methods=['GET', 'POST'])
 @login_required
 def newItem(genre_id):
-    #if 'username' not in login_session:
-    #    return redirect('/login')
     genre = session.query(Genre).filter_by(id=genre_id).one()
     if request.method == 'POST':
         newItem = Item(
             name=request.form['name'], description=request.form['description'],
-            # developer=request.form['developer'],
-            # release=request.form['release'],
             genre_id=genre_id, user_id=genre.user_id)
         session.add(newItem)
         session.commit()
@@ -413,8 +398,6 @@ def newItem(genre_id):
            methods=['GET', 'POST'])
 @login_required
 def editItem(genre_id, item_id):
-    #if 'username' not in login_session:
-    #    return redirect('/login')
     editedItem = session.query(Item).filter_by(id=item_id).one()
     if editedItem.user_id != login_session['user_id']:
         return render_template('uneditable.html')
@@ -423,10 +406,6 @@ def editItem(genre_id, item_id):
             editedItem.name = request.form['name']
         if request.form['description']:
             editedItem.description = request.form['description']
-#        if request.form['developer']:
-#            editedItem.developer = request.form['developer']
-#        if request.form['release']:
-#            editedItem.release = request.form['release']
         session.add(editedItem)
         session.commit()
         flash("Item Successfully Edited!")
@@ -441,8 +420,6 @@ def editItem(genre_id, item_id):
            methods=['GET', 'POST'])
 @login_required
 def deleteItem(genre_id, item_id):
-    #if 'username' not in login_session:
-    #    return redirect('/login')
     deleteItem = session.query(Item).filter_by(id=item_id).one()
     if deleteItem.user_id != login_session['user_id']:
         return render_template('uneditable.html')
@@ -480,5 +457,5 @@ def disconnect():
 
 if __name__ == '__main__':
     app.secret_key = 'super_secret_key'
-    app.debug = True
+    app.debug = False
     app.run(host='0.0.0.0', port=8000)
