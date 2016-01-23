@@ -334,8 +334,8 @@ def editGenre(genre_id):
     editedGenre = session.query(Genre).filter_by(id=genre_id).one()
     #if 'username' not in login_session:
     #    return redirect('/login')
-    #if editedGenre.user_id != login_session['user_id']:
-    #    return render_template('uneditable.html')
+    if editedGenre.user_id != login_session['user_id']:
+        return render_template('uneditable.html')
     if request.method == 'POST':
         if request.form['name']:
             editedGenre.name = request.form['name']
@@ -355,8 +355,8 @@ def deleteGenre(genre_id):
     deleteGenre = session.query(Genre).filter_by(id=genre_id).one()
     #if 'username' not in login_session:
     #    return redirect('/login')
-    #if deleteGenre.user_id != login_session['user_id']:
-    #    return render_template('uneditable.html')
+    if deleteGenre.user_id != login_session['user_id']:
+        return render_template('uneditable.html')
 # "<script>function myFunction() {alert('You are not " \
 #  "authorized to delete this genre. Please create your " \
 # "own genre in order to delete.');}</script><body " \
@@ -416,6 +416,8 @@ def editItem(genre_id, item_id):
     #if 'username' not in login_session:
     #    return redirect('/login')
     editedItem = session.query(Item).filter_by(id=item_id).one()
+    if editedItem.user_id != login_session['user_id']:
+        return render_template('uneditable.html')
     if request.method == 'POST':
         if request.form['name']:
             editedItem.name = request.form['name']
@@ -442,6 +444,8 @@ def deleteItem(genre_id, item_id):
     #if 'username' not in login_session:
     #    return redirect('/login')
     deleteItem = session.query(Item).filter_by(id=item_id).one()
+    if deleteItem.user_id != login_session['user_id']:
+        return render_template('uneditable.html')
     if request.method == 'POST':
         session.delete(deleteItem)
         session.commit()
