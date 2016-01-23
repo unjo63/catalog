@@ -4,6 +4,7 @@ from sqlalchemy import create_engine, asc
 from sqlalchemy.orm import sessionmaker
 from cosmeticitems import Base, Genre, Item, User
 from flask import session as login_session
+from functools import wraps
 import random
 import string
 
@@ -284,6 +285,18 @@ def ItemJSON(genre_id, item_id):
     return jsonify(Item=item.serialize)
 
 
+#login decorator
+def login_required(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if 'username' in login_session:
+            return f(*args, **kwargs)
+        else:
+            flash("You are not allowed to access there")
+            return redirect(url_for('showLogin'))
+    return decorated_function
+
+
 # "This page will show baby genres"
 @app.route('/')
 @app.route('/genres')
@@ -297,9 +310,10 @@ def showGenres():
 
 # "This page will be for making a new genre"
 @app.route('/genre/new', methods=['GET', 'POST'])
+@login_required
 def newGenre():
-    if 'username' not in login_session:
-        return redirect('/login')
+    #if 'username' not in login_session:
+    #    return redirect('/login')
     if request.method == 'POST':
         newGenre = Genre(
             name=request.form['name'],
@@ -315,12 +329,13 @@ def newGenre():
 
 # "This page will be editing genre %s" %genre_id
 @app.route('/genre/<int:genre_id>/edit', methods=['GET', 'POST'])
+@login_required
 def editGenre(genre_id):
     editedGenre = session.query(Genre).filter_by(id=genre_id).one()
-    if 'username' not in login_session:
-        return redirect('/login')
-    if editedGenre.user_id != login_session['user_id']:
-        return render_template('uneditable.html')
+    #if 'username' not in login_session:
+    #    return redirect('/login')
+    #if editedGenre.user_id != login_session['user_id']:
+    #    return render_template('uneditable.html')
     if request.method == 'POST':
         if request.form['name']:
             editedGenre.name = request.form['name']
@@ -335,12 +350,13 @@ def editGenre(genre_id):
 
 # "This page will be deleting genre %s" %genre_id
 @app.route('/genre/<int:genre_id>/delete', methods=['GET', 'POST'])
+@login_required
 def deleteGenre(genre_id):
     deleteGenre = session.query(Genre).filter_by(id=genre_id).one()
-    if 'username' not in login_session:
-        return redirect('/login')
-    if deleteGenre.user_id != login_session['user_id']:
-        return render_template('uneditable.html')
+    #if 'username' not in login_session:
+    #    return redirect('/login')
+    #if deleteGenre.user_id != login_session['user_id']:
+    #    return render_template('uneditable.html')
 # "<script>function myFunction() {alert('You are not " \
 #  "authorized to delete this genre. Please create your " \
 # "own genre in order to delete.');}</script><body " \
@@ -373,9 +389,10 @@ def showItems(genre_id):
 
 # "This page is for making a new item for genre %s" %genre_id
 @app.route('/genre/<int:genre_id>/item/new', methods=['GET', 'POST'])
+@login_required
 def newItem(genre_id):
-    if 'username' not in login_session:
-        return redirect('/login')
+    #if 'username' not in login_session:
+    #    return redirect('/login')
     genre = session.query(Genre).filter_by(id=genre_id).one()
     if request.method == 'POST':
         newItem = Item(
@@ -394,9 +411,10 @@ def newItem(genre_id):
 # "This page is for editing item %s" %item_id
 @app.route('/genre/<int:genre_id>/item/<int:item_id>/edit',
            methods=['GET', 'POST'])
+@login_required
 def editItem(genre_id, item_id):
-    if 'username' not in login_session:
-        return redirect('/login')
+    #if 'username' not in login_session:
+    #    return redirect('/login')
     editedItem = session.query(Item).filter_by(id=item_id).one()
     if request.method == 'POST':
         if request.form['name']:
@@ -419,9 +437,10 @@ def editItem(genre_id, item_id):
 # "This page is for deleting item %s" %item_id
 @app.route('/genre/<int:genre_id>/item/<int:item_id>/delete',
            methods=['GET', 'POST'])
+@login_required
 def deleteItem(genre_id, item_id):
-    if 'username' not in login_session:
-        return redirect('/login')
+    #if 'username' not in login_session:
+    #    return redirect('/login')
     deleteItem = session.query(Item).filter_by(id=item_id).one()
     if request.method == 'POST':
         session.delete(deleteItem)

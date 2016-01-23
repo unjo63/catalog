@@ -1,6 +1,6 @@
 from sqlalchemy import Column, ForeignKey, Integer, String
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import relationship
+from sqlalchemy.orm import relationship, relation, backref
 from sqlalchemy import create_engine
 
 Base = declarative_base()
@@ -57,7 +57,14 @@ class Item(Base):
     id = Column(Integer, primary_key=True)
     genre_id = Column(Integer, ForeignKey('genre.id'))
     user_id = Column(Integer, ForeignKey('user.id'))
-    genre = relationship(Genre)
+    #genre = relationship(Genre)
+    genre = relation(
+        'Genre',
+        uselist=False,
+        backref=backref(
+            'items',
+            uselist=True,
+            cascade='all, delete-orphan',),)
     user = relationship(User)
 
 # We added this serialize function to be able to send JSON objects in a
